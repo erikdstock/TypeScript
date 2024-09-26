@@ -1,0 +1,55 @@
+//// [tests/cases/compiler/arrayIncludes.ts] ////
+
+=== arrayIncludes.ts ===
+var includes: boolean;
+>includes : Symbol(includes, Decl(arrayIncludes.ts, 0, 3))
+
+var myArray: Array<string> = ["a", "b"]
+>myArray : Symbol(myArray, Decl(arrayIncludes.ts, 1, 3))
+>Array : Symbol(Array, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --), Decl(lib.es2015.core.d.ts, --, --), Decl(lib.es2015.iterable.d.ts, --, --), Decl(lib.es2015.symbol.wellknown.d.ts, --, --) ... and 1 more)
+
+type MaybeNull = string | null;
+>MaybeNull : Symbol(MaybeNull, Decl(arrayIncludes.ts, 1, 39))
+
+var included = "a" as MaybeNull
+>included : Symbol(included, Decl(arrayIncludes.ts, 4, 3))
+>MaybeNull : Symbol(MaybeNull, Decl(arrayIncludes.ts, 1, 39))
+
+var notIncluded = "c" as MaybeNull
+>notIncluded : Symbol(notIncluded, Decl(arrayIncludes.ts, 5, 3))
+>MaybeNull : Symbol(MaybeNull, Decl(arrayIncludes.ts, 1, 39))
+
+var aNull = null as MaybeNull
+>aNull : Symbol(aNull, Decl(arrayIncludes.ts, 6, 3))
+>MaybeNull : Symbol(MaybeNull, Decl(arrayIncludes.ts, 1, 39))
+
+// Should be OK
+includes = myArray.includes(included);
+>includes : Symbol(includes, Decl(arrayIncludes.ts, 0, 3))
+>myArray.includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>myArray : Symbol(myArray, Decl(arrayIncludes.ts, 1, 3))
+>includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>included : Symbol(included, Decl(arrayIncludes.ts, 4, 3))
+
+includes = myArray.includes(notIncluded);
+>includes : Symbol(includes, Decl(arrayIncludes.ts, 0, 3))
+>myArray.includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>myArray : Symbol(myArray, Decl(arrayIncludes.ts, 1, 3))
+>includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>notIncluded : Symbol(notIncluded, Decl(arrayIncludes.ts, 5, 3))
+
+includes = myArray.includes(aNull);
+>includes : Symbol(includes, Decl(arrayIncludes.ts, 0, 3))
+>myArray.includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>myArray : Symbol(myArray, Decl(arrayIncludes.ts, 1, 3))
+>includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>aNull : Symbol(aNull, Decl(arrayIncludes.ts, 6, 3))
+
+// Should be an error because the argument does not extend the array element type
+// @ts-expect-error
+includes = myArray.includes(123);
+>includes : Symbol(includes, Decl(arrayIncludes.ts, 0, 3))
+>myArray.includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+>myArray : Symbol(myArray, Decl(arrayIncludes.ts, 1, 3))
+>includes : Symbol(Array.includes, Decl(lib.es2016.array.include.d.ts, --, --))
+

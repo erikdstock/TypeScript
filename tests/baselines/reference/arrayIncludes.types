@@ -1,0 +1,110 @@
+//// [tests/cases/compiler/arrayIncludes.ts] ////
+
+=== arrayIncludes.ts ===
+var includes: boolean;
+>includes : boolean
+>         : ^^^^^^^
+
+var myArray: Array<string> = ["a", "b"]
+>myArray : string[]
+>        : ^^^^^^^^
+>["a", "b"] : string[]
+>           : ^^^^^^^^
+>"a" : "a"
+>    : ^^^
+>"b" : "b"
+>    : ^^^
+
+type MaybeNull = string | null;
+>MaybeNull : string
+>          : ^^^^^^
+
+var included = "a" as MaybeNull
+>included : string
+>         : ^^^^^^
+>"a" as MaybeNull : string
+>                 : ^^^^^^
+>"a" : "a"
+>    : ^^^
+
+var notIncluded = "c" as MaybeNull
+>notIncluded : string
+>            : ^^^^^^
+>"c" as MaybeNull : string
+>                 : ^^^^^^
+>"c" : "c"
+>    : ^^^
+
+var aNull = null as MaybeNull
+>aNull : string
+>      : ^^^^^^
+>null as MaybeNull : string
+>                  : ^^^^^^
+
+// Should be OK
+includes = myArray.includes(included);
+>includes = myArray.includes(included) : boolean
+>                                      : ^^^^^^^
+>includes : boolean
+>         : ^^^^^^^
+>myArray.includes(included) : boolean
+>                           : ^^^^^^^
+>myArray.includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>                 : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>myArray : string[]
+>        : ^^^^^^^^
+>includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>         : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>included : string
+>         : ^^^^^^
+
+includes = myArray.includes(notIncluded);
+>includes = myArray.includes(notIncluded) : boolean
+>                                         : ^^^^^^^
+>includes : boolean
+>         : ^^^^^^^
+>myArray.includes(notIncluded) : boolean
+>                              : ^^^^^^^
+>myArray.includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>                 : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>myArray : string[]
+>        : ^^^^^^^^
+>includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>         : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>notIncluded : string
+>            : ^^^^^^
+
+includes = myArray.includes(aNull);
+>includes = myArray.includes(aNull) : boolean
+>                                   : ^^^^^^^
+>includes : boolean
+>         : ^^^^^^^
+>myArray.includes(aNull) : boolean
+>                        : ^^^^^^^
+>myArray.includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>                 : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>myArray : string[]
+>        : ^^^^^^^^
+>includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>         : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>aNull : string
+>      : ^^^^^^
+
+// Should be an error because the argument does not extend the array element type
+// @ts-expect-error
+includes = myArray.includes(123);
+>includes = myArray.includes(123) : boolean
+>                                 : ^^^^^^^
+>includes : boolean
+>         : ^^^^^^^
+>myArray.includes(123) : boolean
+>                      : ^^^^^^^
+>myArray.includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>                 : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>myArray : string[]
+>        : ^^^^^^^^
+>includes : <U extends string>(searchElement: U, fromIndex?: number) => boolean
+>         : ^ ^^^^^^^^^^^^^^^^^             ^^^^^         ^^^      ^^^^^       
+>123 : 123
+>    : ^^^
+
